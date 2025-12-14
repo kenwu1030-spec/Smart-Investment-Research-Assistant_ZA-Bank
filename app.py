@@ -6,6 +6,56 @@ from bs4 import BeautifulSoup
 import numpy as np
 import torch
 
+# Set the font size with Global CSS Approach
+
+st.markdown('''
+<style>
+    /* Set base font size for all text elements */
+    .main-title, .subtitle, .section-header, 
+    .content-text, .metric-label, .metric-value {
+        font-size: 20px !important;  /* Match function title size */
+    }
+    
+    /* If function titles use a specific class */
+    .function-title {
+        font-size: 20px !important;
+    }
+    
+    /* Standardize all headers */
+    h1, h2, h3, h4, h5, h6 {
+        font-size: 20px !important;
+    }
+    
+    /* Standardize paragraph text */
+    p, div, span {
+        font-size: 20px !important;
+    }
+    
+    /* Standardize input labels and buttons */
+    label, button, .stButton>button {
+        font-size: 20px !important;
+    }
+</style>
+''', unsafe_allow_html=True)
+
+# Option 2: Individual Element Styling
+# Replace your existing st.header(), st.subheader() calls with:
+
+st.markdown('<p style="font-size:20px;">📝 Enter Financial Article URL</p>', 
+            unsafe_allow_html=True)
+st.markdown('<p style="font-size:20px;">📄 Article Summary</p>', 
+            unsafe_allow_html=True)
+st.markdown('<p style="font-size:20px;">📊 Investment Analysis Report</p>', 
+            unsafe_allow_html=True)
+st.markdown('<p style="font-size:20px;">🎯 Detailed Sentiment Scores</p>', 
+            unsafe_allow_html=True)
+st.markdown('<p style="font-size:20px;">💡 Investment Advice</p>', 
+            unsafe_allow_html=True)
+
+# For content text
+st.markdown('<p style="font-size:20px;">Your content here</p>', 
+            unsafe_allow_html=True)
+
 # main part
 # Set page configuration
 st.set_page_config(page_title="Investment Research Assistant", page_icon="📈", layout="wide")
