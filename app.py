@@ -1,5 +1,4 @@
 # import part
-import streamlit as st
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
 import requests
 from bs4 import BeautifulSoup
