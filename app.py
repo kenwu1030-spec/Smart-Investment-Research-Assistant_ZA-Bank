@@ -1,5 +1,4 @@
 # import part
-!pip install streamlit # delete this when run on Streamlit
 import streamlit as st
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
 import requests
