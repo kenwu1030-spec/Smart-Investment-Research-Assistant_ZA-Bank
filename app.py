@@ -1,7 +1,7 @@
 @@ -1 +1,197 @@
 # import part
 import streamlit as st
-from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
+from transformers import pipeline, AutoTokenizer, AutoModelForSequence
 import requests
 from bs4 import BeautifulSoup
 import numpy as np
