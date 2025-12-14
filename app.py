@@ -108,7 +108,7 @@ def analyze_sentiment(text, tokenizer, model):
         'all_scores': {id2label[i]: float(predictions[0][i]) for i in range(len(id2label))}
     }
 
-# Function: Investiment Research Assistant
+# Function: Investment Research Assistant
 def investment_advisor(summary_text, sentiment_result):
     sentiment_label = sentiment_result['label'].lower()
     confidence = sentiment_result['score']
@@ -176,9 +176,9 @@ def main():
                 # Display all sentiment scores
                 st.subheader("🎯 Detailed Sentiment Scores")
                 score_cols = st.columns(3)
-                for idx, (label, score) in enumerate(result['all_scores'].items()):
-                    with score_cols[idx]:
-                        st.metric(label.capitalize(), f"{score:.2%}")
+            for idx, (label, score) in enumerate(result['all_scores'].items()):
+    with score_cols[idx]:
+        st.metric(label.capitalize(), f"{score:.2%}")
 
                 st.markdown("---")
                 st.subheader("💡 Investment Advice")
@@ -192,6 +192,6 @@ def main():
                     st.warning(result['advice'])
         else:
             st.warning("Please enter a valid URL")
-
+            
 if __name__ == "__main__":
     main()
