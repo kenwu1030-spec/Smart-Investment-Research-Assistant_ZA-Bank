@@ -36,6 +36,25 @@ st.markdown('''
     }
 </style>
 ''', unsafe_allow_html=True)
+st.markdown("""
+<style>
+    /* Make the main title larger */
+    h1 {
+        font-size: 36px !important;
+        font-weight: bold !important;
+    }
+    
+    /* Specifically target the first heading if needed */
+    .main h1:first-of-type {
+        font-size: 36px !important;
+        font-weight: bold !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# title displayed larger
+st.title("📈 Investment Research Assistant: Financial Article Analysis")
+st.write("Analyze financial articles to get investment recommendations based on sentiment analysis")
 
 # main part
 # Set page configuration
