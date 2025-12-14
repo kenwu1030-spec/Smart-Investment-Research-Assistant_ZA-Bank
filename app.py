@@ -1,5 +1,4 @@
 # import part
-!pip install streamlit # delete this when run on Streamlit
 import streamlit as st
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
 import requests
@@ -109,7 +108,7 @@ def analyze_sentiment(text, tokenizer, model):
         'all_scores': {id2label[i]: float(predictions[0][i]) for i in range(len(id2label))}
     }
 
-# Function: Investiment Research Assistant
+# Function: Investment Research Assistant
 def investment_advisor(summary_text, sentiment_result):
     sentiment_label = sentiment_result['label'].lower()
     confidence = sentiment_result['score']
