@@ -27,7 +27,7 @@ st.markdown('''
     
     /* Standardize paragraph text */
     p, div, span {
-        font-size: 20px !important;
+        font-size: 36px !important;
     }
     
     /* Standardize input labels and buttons */
