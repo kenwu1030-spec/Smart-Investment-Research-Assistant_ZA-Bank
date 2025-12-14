@@ -53,8 +53,7 @@ def extract_text_from_docx(uploaded_file):
             if paragraph.text.strip():
                 text_content.append(paragraph.text)
         
-        return "
-".join(text_content)
+        return "".join(text_content)
     except Exception as e:
         st.error(f"Error reading DOCX file: {str(e)}")
         return None
