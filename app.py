@@ -1,5 +1,5 @@
-
 # import part
+!pip install streamlit # delete this when run on Streamlit
 import streamlit as st
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
 import requests
@@ -7,16 +7,13 @@ from bs4 import BeautifulSoup
 import numpy as np
 import torch
 
-
 # main part
 # Set page configuration
 st.set_page_config(page_title="Investment Research Assistant", page_icon="📈", layout="wide")
 
-
 # Title
 st.title("📈 Investment Research Assistant: Financial Article Analysis")
 st.markdown("Analyze financial articles to get investment recommendations based on sentiment analysis")
-
 
 # Initialize models with caching
 @st.cache_resource
@@ -25,18 +22,15 @@ def load_summarization_model():
     tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-cnn")
     tokenizer.model_max_length = 1024
 
-
     # Initialize pipeline with the configured tokenizer
     summarizer = pipeline("summarization", model="facebook/bart-large-cnn", tokenizer=tokenizer)
     return summarizer
-
 
 @st.cache_resource
 def load_sentiment_model():
     tokenizer = AutoTokenizer.from_pretrained("kenwuhj/CustomModel_ZA_sentiment")
     model = AutoModelForSequenceClassification.from_pretrained("kenwuhj/CustomModel_ZA_sentiment")
     return tokenizer, model
-
 
 # Function: Enhanced Text Summarization from URL
 def text_summarization(url, summarizer):
@@ -50,22 +44,18 @@ def text_summarization(url, summarizer):
         'Upgrade-Insecure-Requests': '1'
     }
 
-
     try:
         # Fetch and parse the web content with headers
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
 
-
         # Extract text from paragraphs
         paragraphs = soup.find_all('p')
         text_content = "".join([p.get_text() for p in paragraphs])
 
-
         if not text_content.strip():
             text_content = soup.get_text()
-
 
         # Generate summary
         input_text = summarizer(
@@ -75,22 +65,18 @@ def text_summarization(url, summarizer):
             truncation=True
         )[0]["summary_text"]
 
-
         return input_text
     except Exception as e:
         st.error(f"Error fetching URL: {str(e)}")
         return None
-
 
 # Function: Enhanced Sentiment Analysis
 def analyze_sentiment(text, tokenizer, model):
     # Define label mapping
     id2label = {0: "negative", 1: "neutral", 2: "positive"}
 
-
     # Prepare text with context
     formatted_text = f"Generated text: {text}"
-
 
     # Tokenize input
     inputs = tokenizer(
@@ -100,28 +86,22 @@ def analyze_sentiment(text, tokenizer, model):
         return_tensors='pt'
     )
 
-
     # Get model predictions
     with torch.no_grad():
         outputs = model(**inputs)
-
 
     # Apply softmax to get probabilities
     predictions = torch.nn.functional.softmax(outputs.logits, dim=-1)
     predictions = predictions.cpu().detach().numpy()
 
-
     # Get the index of the largest output value
     max_index = np.argmax(predictions)
-
 
     # Convert numeric prediction to text label
     predicted_label = id2label[max_index]
 
-
     # Get confidence score
     confidence = predictions[0][max_index]
-
 
     return {
         'label': predicted_label,
@@ -129,12 +109,10 @@ def analyze_sentiment(text, tokenizer, model):
         'all_scores': {id2label[i]: float(predictions[0][i]) for i in range(len(id2label))}
     }
 
-
 # Function: Investiment Research Assistant
 def investment_advisor(summary_text, sentiment_result):
     sentiment_label = sentiment_result['label'].lower()
     confidence = sentiment_result['score']
-
 
     if sentiment_label == 'positive':
         advice = "This stock is recommended."
@@ -145,7 +123,6 @@ def investment_advisor(summary_text, sentiment_result):
     else:
         advice = "Unable to determine investment recommendation."
 
-
     return {
         'summary': summary_text,
         'sentiment': sentiment_label,
@@ -154,7 +131,6 @@ def investment_advisor(summary_text, sentiment_result):
         'advice': advice
     }
 
-
 # Main App
 def main():
     # Load models
@@ -162,11 +138,9 @@ def main():
         summarizer = load_summarization_model()
         sentiment_tokenizer, sentiment_model = load_sentiment_model()
 
-
     # Input section
     st.subheader("📝 Enter Financial Article URL")
     url = st.text_input("Enter the URL of the financial article:", placeholder="https://example.com/article")
-
 
     if st.button("Analyze Article", type="primary"):
         if url:
@@ -174,40 +148,31 @@ def main():
             with st.spinner("Fetching and summarizing article..."):
                 summary_text = text_summarization(url, summarizer)
 
-
             if summary_text:
                 st.success("Summary generated successfully!")
-
 
                 # Display summary
                 st.subheader("📄 Article Summary")
                 st.write(summary_text)
 
-
                 # Step 2: Sentiment Analysis
                 with st.spinner("Analyzing sentiment..."):
                     sentiment_result = analyze_sentiment(summary_text, sentiment_tokenizer, sentiment_model)
 
-
                 # Step 3: Generate Investment Advice
                 result = investment_advisor(summary_text, sentiment_result)
-
 
                 # Display results
                 st.markdown("---")
                 st.subheader("📊 Investment Analysis Report")
 
-
                 col1, col2 = st.columns(2)
-
 
                 with col1:
                     st.metric("Sentiment", result['sentiment'].upper())
 
-
                 with col2:
                     st.metric("Confidence", f"{result['confidence']:.2%}")
-
 
                 # Display all sentiment scores
                 st.subheader("🎯 Detailed Sentiment Scores")
@@ -215,11 +180,11 @@ def main():
                 for idx, (label, score) in enumerate(result['all_scores'].items()):
                     with score_cols[idx]:
                         st.metric(label.capitalize(), f"{score:.2%}")
-                
-                # Display investment advice
+
                 st.markdown("---")
-                st.subheader("💡 Investment Recommendation")
-                
+                st.subheader("💡 Investment Advice")
+
+                # Color-code advice based on sentiment
                 if result['sentiment'] == 'positive':
                     st.success(result['advice'])
                 elif result['sentiment'] == 'negative':
@@ -227,8 +192,7 @@ def main():
                 else:
                     st.warning(result['advice'])
         else:
-            st.error("Please enter a valid URL")
+            st.warning("Please enter a valid URL")
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
